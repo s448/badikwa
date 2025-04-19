@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "838269444220",
+    "project_id": "badikwa-b3063",
+    "storage_bucket": "badikwa-b3063.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838269444220:android:56a112422d6e1565b529f9",
+        "android_client_info": {
+          "package_name": "com.example.badikwa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAY6am1jn1b4rRlT6Ok19AWOw8xSidAqE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
