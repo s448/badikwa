@@ -11,10 +11,10 @@ class CreateAccBloc extends Bloc<CreateAccEventInit, CreateAccState> {
       emit(CreateAccLoadingState());
       try {
         final result = await authData.registerAndLoginUser(event.user!);
-        if (result) {
+        if (result.success) {
           emit(CreateAccSuccessState());
         } else {
-          emit(CreateAccFailedState());
+          emit(CreateAccFailedState(msg: result.message));
         }
       } catch (e) {
         emit(CreateAccFailedState(msg: e.toString()));

@@ -1,6 +1,6 @@
 abstract class AuthEvent {}
 
-class AuthLoginEvent extends AuthEvent {}
+class AppStarted extends AuthEvent {}
 
 class AuthLoginRequestedEvent extends AuthEvent {
   final String email;
@@ -9,6 +9,4 @@ class AuthLoginRequestedEvent extends AuthEvent {
   AuthLoginRequestedEvent({required this.email, required this.password});
 }
 
-class AuthForgetPasswordEvent extends AuthEvent {}
-
-class AuthSignUpEvent extends AuthEvent {}
+class SignOutEvent extends AuthEvent {}

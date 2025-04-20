@@ -1,4 +1,5 @@
 import 'package:badikwa/blocs/authBloc/auth_bloc.dart';
+import 'package:badikwa/blocs/authBloc/auth_event.dart';
 import 'package:badikwa/core/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,9 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc()..add(AppStarted()),
+        ),
         BlocProvider<CreateAccBloc>(create: (context) => CreateAccBloc()),
       ],
       child: MyApp(),
