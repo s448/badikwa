@@ -1,4 +1,4 @@
-import 'package:badikwa/data/location_data.dart';
+import 'package:prufcoach/data/location_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'home_event.dart';
 import 'home_state.dart';

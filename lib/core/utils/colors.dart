@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Teal Blue - Main brand color
-  static const Color tealBlue = Color(0xFF1CA7B6);
+  // Primary Colors
+  static const Color primaryGreen = Color(0xFF00B16A);
+  static const Color accentYellow = Color(0xFFF5A623);
 
-  // Dark Gray / Charcoal - Used in text and inner shapes
-  static const Color darkGray = Color(0xFF2F2F2F);
+  // Text / Icon Colors
+  static const Color darkText = Color(0xFF000000);
+  static const Color placeholderText = Color(0xFFC4F0E0);
 
-  // Sky Blue - Used in subtext and curves
-  static const Color skyBlue = Color(0xFF42BCD1);
-
-  // Pure Black - Tagline text color
-  static const Color black = Color(0xFF000000);
-
-  // White - Background color
-  static const Color white = Color(0xFFFFFFFF);
+  // Background Colors
+  static const Color lightBackground = Color(0xFFFAFAFA);
 }

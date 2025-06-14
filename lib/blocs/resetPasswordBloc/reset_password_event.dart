@@ -5,3 +5,9 @@ class SendResetPasswordEmailEvent extends ResetPasswordEvent {
 
   SendResetPasswordEmailEvent(this.email);
 }
+
+class VerifyOtpEvent extends ResetPasswordEvent {
+  final String otp;
+  final String email;
+  VerifyOtpEvent(this.email, this.otp);
+}

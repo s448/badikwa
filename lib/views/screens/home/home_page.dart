@@ -1,10 +1,10 @@
-import 'package:badikwa/blocs/authBloc/auth_bloc.dart';
-import 'package:badikwa/blocs/authBloc/auth_event.dart';
-import 'package:badikwa/blocs/authBloc/auth_state.dart';
-import 'package:badikwa/blocs/homeBloc/home_bloc.dart';
-import 'package:badikwa/blocs/homeBloc/home_event.dart';
-import 'package:badikwa/core/routes.dart';
-import 'package:badikwa/data/location_data.dart';
+import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
+import 'package:prufcoach/blocs/authBloc/auth_event.dart';
+import 'package:prufcoach/blocs/authBloc/auth_state.dart';
+import 'package:prufcoach/blocs/homeBloc/home_bloc.dart';
+import 'package:prufcoach/blocs/homeBloc/home_event.dart';
+import 'package:prufcoach/core/routes.dart';
+import 'package:prufcoach/data/location_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

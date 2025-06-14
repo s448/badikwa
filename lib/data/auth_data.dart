@@ -1,116 +1,173 @@
-import 'dart:async';
 import 'dart:developer';
-import 'package:badikwa/core/utils/app_messages.dart';
-import 'package:badikwa/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide User;
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:prufcoach/core/localStorage/auth_storage.dart';
+import 'package:prufcoach/core/localStorage/user_storage.dart';
+import 'package:prufcoach/models/Dto/api_response.dart';
+import 'package:prufcoach/models/user_model.dart';
 
 class AuthData {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: 'https://b0ce-196-154-3-110.ngrok-free.app/api/',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+      headers: {'Content-Type': 'application/json'},
+    ),
+  );
 
-  Future<({bool success, String? message})> loginWithEmailAndPassword(
+  Future<ApiResponse<LoginResponse>> loginWithEmailAndPassword(
     String email,
     String password,
   ) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      final response = await _dio.post(
+        'auth/login',
+        data: {'email': email, 'password': password},
       );
-      final firebaseUser = userCredential.user;
 
-      if (firebaseUser == null) {
-        return (
+      final data = response.data;
+
+      if (response.statusCode == 200) {
+        await AuthStorage.saveTokens(data['accessToken'], data['refreshToken']);
+        final loginResponse = LoginResponse.fromJson(data);
+        return ApiResponse(
+          success: true,
+          response: loginResponse,
+          message: 'User logged in successfully',
+        );
+      } else {
+        return ApiResponse(
           success: false,
-          message: "User not found. Please check your credentials.",
+          message: data['message'] ?? 'Login failed',
         );
       }
-      return (success: true, message: "User logged in successfully");
-    } on FirebaseAuthException catch (e) {
-      log('Login failed: ${e.message}');
-      return (
-        success: false,
-        message: e.message ?? "Authentication error occurred.",
-      );
-    } catch (e) {
-      log('An error occurred: $e');
-      return (success: false, message: "Unexpected error: ${e.toString()}");
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['message'] ?? e.message ?? 'Unknown error';
+      log('Login failed: $errorMessage');
+      return ApiResponse(success: false, message: errorMessage);
     }
   }
 
-  Future<({bool success, String? message})> registerAndLoginUser(
-    User user,
-  ) async {
+  Future<ApiResponse<LoginResponse>> registerAndLoginUser(User user) async {
     try {
-      // Check if phone number already exists
-      final phoneQuery =
-          await FirebaseFirestore.instance
-              .collection('users')
-              .where('phoneNumber', isEqualTo: user.phoneNumber)
-              .get();
+      final response = await _dio.post(
+        'auth/register',
+        data: {
+          'fullName': user.name,
+          'email': user.email,
+          'password': user.password,
+        },
+      );
 
-      if (phoneQuery.docs.isNotEmpty) {
-        return (success: false, message: "Phone number is already registered.");
-      }
-      //create user
-      UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(
-            email: user.email,
-            password: user.password,
-          );
-      final firebaseUser = userCredential.user;
+      var loginResponse = await loginWithEmailAndPassword(
+        user.email,
+        user.password,
+      );
 
-      if (firebaseUser == null) {
-        return (
+      final data = response.data;
+
+      await UserStorage.saveUserData(data['id'], data['fullName'] ?? user.name);
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          loginResponse.success) {
+        return ApiResponse(
+          success: true,
+          response: loginResponse.response,
+          message: 'User registered successfully',
+        );
+      } else if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          !loginResponse.success) {
+        return ApiResponse(
           success: false,
-          message: "User creation failed. Please try again.",
+          message:
+              data['message'] ??
+              'User Registered successfully , but login failed',
+        );
+      } else {
+        return ApiResponse(
+          success: false,
+          message: data['message'] ?? 'Registration failed',
         );
       }
-      // Save user data to Firestore
-      await FirebaseFirestore.instance.collection('users').doc(user.id).set({
-        'name': user.name,
-        'phoneNumber': user.phoneNumber,
-        'email': user.email,
-        'password': user.password,
-        'id': user.id,
-      });
-      return (success: true, message: "User created successfully");
-    } on FirebaseAuthException catch (e) {
-      log('Registration failed: ${e.message}');
-      return (
-        success: false,
-        message: e.message ?? "Authentication error occurred.",
-      );
-    } catch (e) {
-      log('An error occurred: $e');
-      return (success: false, message: "Unexpected error: ${e.toString()}");
+    } on DioException catch (e) {
+      final errorMessage =
+          e.response?.data['message'] ?? e.message ?? 'Unknown error';
+      log('Registration failed: $errorMessage');
+      return ApiResponse(success: false, message: errorMessage);
     }
   }
 
-  bool checkAutoLogin() {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    log(currentUser?.uid ?? "No user logged in");
-    return currentUser != null;
+  Future<ApiResponse<dynamic>> sendOTPViaEmail(String email) async {
+    try {
+      final response = await _dio.post('otp/send-otp', data: {'email': email});
+
+      final data = response.data;
+      log(response.statusCode.toString());
+      log(data.toString());
+      if (response.statusCode == 200) {
+        return ApiResponse(success: true, message: data['message']);
+      } else {
+        return ApiResponse(success: false, message: data['message']);
+      }
+    } on DioException catch (e) {
+      log('Send OTP failed: ${e.response?.data ?? e.message}');
+      return ApiResponse(
+        success: false,
+        message: e.response?.data['message'] ?? 'Failed to send OTP',
+      );
+    }
   }
 
-  Future<({bool success, String? message})> sendResetPasswordEmail(
-    String email,
-  ) async {
+  Future<bool> validateToken() async {
+    final accessToken = await AuthStorage.getAccessToken();
+    if (accessToken == null) return false;
+
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-      return (success: true, message: "Password reset email sent.");
-    } catch (e) {
-      log('Error sending password reset email: $e');
-      return (success: false, message: cleanFirebaseMessage(e.toString()));
+      final response = await _dio.get(
+        '/validate-token',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        return true; // token is valid
+      }
+      return false;
+    } on DioException catch (e) {
+      // You can check if status code is 401 for expired token
+      if (e.response?.statusCode == 401) {
+        print("Token expired.");
+      }
+      return false;
+    }
+  }
+
+  Future<bool> verifyOTP(String email, String otp) async {
+    try {
+      final response = await _dio.post(
+        'otp/verify-otp',
+        data: {'email': email, 'otp': otp},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      log('Verify OTP failed: ${e.response?.data ?? e.message}');
+      return false;
     }
   }
 
   Future<bool> signOut() async {
     try {
-      await _firebaseAuth.signOut();
+      await AuthStorage.clearTokens();
+      await UserStorage.clearUserData();
       return true;
     } catch (e) {
-      log('Error signing out: $e');
+      log('Sign out failed: $e');
       return false;
     }
   }

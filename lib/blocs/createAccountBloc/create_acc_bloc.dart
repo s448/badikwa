@@ -1,6 +1,6 @@
-import 'package:badikwa/blocs/createAccountBloc/create_acc_event.dart';
-import 'package:badikwa/blocs/createAccountBloc/create_acc_state.dart';
-import 'package:badikwa/data/auth_data.dart';
+import 'package:prufcoach/blocs/createAccountBloc/create_acc_event.dart';
+import 'package:prufcoach/blocs/createAccountBloc/create_acc_state.dart';
+import 'package:prufcoach/data/auth_data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateAccBloc extends Bloc<CreateAccEventInit, CreateAccState> {

@@ -1,9 +1,9 @@
-import 'package:badikwa/blocs/resetPasswordBloc/reset_password_bloc.dart';
-import 'package:badikwa/blocs/resetPasswordBloc/reset_password_event.dart';
-import 'package:badikwa/blocs/resetPasswordBloc/reset_password_state.dart';
-import 'package:badikwa/core/utils/app_messages.dart';
-import 'package:badikwa/views/widgets/buttons.dart';
-import 'package:badikwa/views/widgets/decorations.dart';
+import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
+import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_event.dart';
+import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_state.dart';
+import 'package:prufcoach/core/utils/app_messages.dart';
+import 'package:prufcoach/views/widgets/buttons.dart';
+import 'package:prufcoach/views/widgets/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,16 +21,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Forgot Password")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Forgot Password"),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
       body: BlocProvider(
         create: (context) => ResetPasswordBloc(),
         child: BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
           listener: (context, state) {
-            if (state is ResetPasswordSuccess) {
+            if (state is SentOtpVerificationSuccess) {
               appMessageShower(
                 context,
                 "Reset mail is sent",
                 "Check your email to reset your password",
+              );
+              Navigator.pushReplacementNamed(
+                context,
+                '/otp-verification',
+                arguments: state.email,
               );
             } else if (state is ResetPasswordError) {
               appMessageShower(context, "Error", state.message);

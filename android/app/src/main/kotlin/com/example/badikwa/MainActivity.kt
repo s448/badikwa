@@ -1,4 +1,4 @@
-package com.example.badikwa
+package com.example.prufcoach
 
 import io.flutter.embedding.android.FlutterActivity
 

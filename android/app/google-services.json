@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "838269444220",
-    "project_id": "badikwa-b3063",
-    "storage_bucket": "badikwa-b3063.firebasestorage.app"
+    "project_id": "prufcoach-b3063",
+    "storage_bucket": "prufcoach-b3063.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:838269444220:android:56a112422d6e1565b529f9",
         "android_client_info": {
-          "package_name": "com.example.badikwa"
+          "package_name": "com.example.prufcoach"
         }
       },
       "oauth_client": [],

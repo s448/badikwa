@@ -7,8 +7,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthData authData = AuthData();
 
   AuthBloc() : super(AuthInitial()) {
-    on<AppStarted>((event, emit) {
-      authData.checkAutoLogin() == true
+    on<AppStarted>((event, emit) async {
+      await authData.validateToken() == true
           ? emit(AuthLoginSuccessState())
           : emit(AuthInitial());
     });
@@ -25,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthFailureState(message: result.message));
         }
       } catch (e) {
-        emit(AuthFailureState(message: "An error occurred: $e"));
+        emit(AuthFailureState(message: "An error occurred: $e."));
       }
     });
     on<SignOutEvent>((event, emit) async {

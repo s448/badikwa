@@ -1,11 +1,12 @@
-import 'package:badikwa/blocs/authBloc/auth_bloc.dart';
-import 'package:badikwa/blocs/authBloc/auth_event.dart';
-import 'package:badikwa/blocs/authBloc/auth_state.dart';
-import 'package:badikwa/core/routes.dart';
-import 'package:badikwa/core/utils/app_messages.dart';
-import 'package:badikwa/core/utils/colors.dart';
-import 'package:badikwa/views/widgets/buttons.dart';
-import 'package:badikwa/views/widgets/decorations.dart';
+import 'package:auth_buttons/auth_buttons.dart';
+import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
+import 'package:prufcoach/blocs/authBloc/auth_event.dart';
+import 'package:prufcoach/blocs/authBloc/auth_state.dart';
+import 'package:prufcoach/core/routes.dart';
+import 'package:prufcoach/core/utils/app_messages.dart';
+import 'package:prufcoach/core/utils/colors.dart';
+import 'package:prufcoach/views/widgets/buttons.dart';
+import 'package:prufcoach/views/widgets/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,32 +41,53 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
                 SizedBox(
                   child: Image.asset(
-                    "assets/logo.jpg",
-                    height: MediaQuery.of(context).size.width * 0.6,
+                    "assets/icons/logo.png",
+                    height: MediaQuery.of(context).size.width * 0.35,
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
 
+                Text(
+                  "Anmelden",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryGreen,
+                  ),
+                ),
+
+                Text(
+                  "Dein Deutsch-Abenteuer wartet, jetzt anmelden!",
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.primaryGreen,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                 TextField(
+                  cursorColor: AppColors.primaryGreen,
                   controller: _emailController,
                   decoration: AppInputDecorations.inputField(
-                    hintText: 'Email address',
+                    hintText: 'E-mail-adresse',
                     icon: Icons.email_outlined,
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(height: 16),
                 TextField(
+                  cursorColor: AppColors.primaryGreen,
                   controller: _passwordController,
                   decoration: AppInputDecorations.inputField(
-                    hintText: 'Password',
-                    icon: Icons.lock_outline_rounded,
+                    hintText: 'Passwort',
+                    icon: Icons.password,
                     isPassword: true,
                     togglePasswordVisibility: () {
                       setState(() {
@@ -76,7 +98,25 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   obscureText: _passwordVisibility,
                 ),
-                SizedBox(height: 32),
+                SizedBox(height: 15),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed:
+                        () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.resetpassword,
+                        ),
+                    child: Text(
+                      "passwort vergessen?",
+                      style: TextStyle(
+                        color: AppColors.primaryGreen,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
                 GestureDetector(
                   onTap: () {
                     final email = _emailController.text.trim();
@@ -109,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 )
                                 : Text(
-                                  "Log in",
+                                  "Anmelden",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -120,46 +160,66 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-                const SizedBox(height: 12),
-                TextButton(
-                  onPressed:
-                      () =>
-                          Navigator.pushNamed(context, AppRoutes.resetpassword),
-                  child: Text(
-                    "Forgot password ?",
-                    style: TextStyle(
-                      color: AppColors.tealBlue,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                Text(
+                  "Order weiter mit",
+                  style: TextStyle(
+                    color: AppColors.primaryGreen,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account ?",
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GoogleAuthButton(
+                      onPressed: () {},
+                      themeMode: ThemeMode.light,
+                      materialStyle: ButtonStyle(),
+                      style: AuthButtonStyle(
+                        iconBackground: Colors.transparent,
+                        buttonType: AuthButtonType.icon,
+                        iconType: AuthIconType.secondary,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            AppRoutes.signup,
-                          );
-                        },
-                        child: Text(
-                          "Sign up",
-                          style: TextStyle(color: AppColors.skyBlue),
-                        ),
+                    ),
+                    const SizedBox(width: 15),
+                    FacebookAuthButton(
+                      onPressed: () {},
+                      themeMode: ThemeMode.light,
+                      materialStyle: ButtonStyle(),
+                      style: AuthButtonStyle(
+                        iconBackground: Colors.transparent,
+                        buttonType: AuthButtonType.icon,
+                        iconType: AuthIconType.secondary,
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                Text(
+                  "Noch kein konto ?",
+                  style: TextStyle(
+                    color: AppColors.darkText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, AppRoutes.signup);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                    child: Text(
+                      "Jetzet Registrieren",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 SizedBox(height: 16),

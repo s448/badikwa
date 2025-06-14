@@ -1,4 +1,4 @@
-import 'package:badikwa/models/user_model.dart';
+import 'package:prufcoach/models/user_model.dart';
 
 abstract class CreateAccState {}
 
