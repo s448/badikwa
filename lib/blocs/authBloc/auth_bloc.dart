@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (result.success == true) {
           emit(AuthLoginSuccessState());
         } else {
-          emit(AuthFailureState(message: result.message));
+          emit(AuthFailureState(message: "Invalid email or password."));
         }
       } catch (e) {
         emit(AuthFailureState(message: "An error occurred: $e."));

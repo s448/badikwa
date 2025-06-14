@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_event.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_state.dart';
 import 'package:prufcoach/data/auth_data.dart';
@@ -26,12 +28,29 @@ class ResetPasswordBloc<T>
       try {
         final result = await _authData.verifyOTP(event.email, event.otp);
         if (result == true) {
-          emit(OtpVerificationSuccess());
+          log("OTP verified successfully for email: ${event.email}");
+          emit(OtpVerificationSuccess(event.email));
         } else {
           emit(OtpVerificationError("Invalid OTP."));
         }
       } catch (e) {
         emit(OtpVerificationError("An error occurred: $e"));
+      }
+    });
+    on<ResetPasswordEventWithNewPassword>((event, emit) async {
+      emit(ResetPasswordLoading());
+      try {
+        final result = await _authData.resetPassword(
+          event.email,
+          event.newPassword,
+        );
+        if (result.success == true) {
+          emit(ResetPasswordSuccess());
+        } else {
+          emit(ResetPasswordError(result.message ?? "An error occurred."));
+        }
+      } catch (e) {
+        emit(ResetPasswordError("An error occurred: $e"));
       }
     });
   }

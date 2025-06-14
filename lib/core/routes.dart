@@ -30,7 +30,9 @@ class AppRoutes {
               (_) => OtpVerificationPage(email: settings.arguments as String),
         );
       case newpassword:
-        return MaterialPageRoute(builder: (_) => NewPasswordPage());
+        return MaterialPageRoute(
+          builder: (_) => NewPasswordPage(email: settings.arguments as String),
+        );
       default:
         return MaterialPageRoute(builder: (_) => LandingPage());
     }

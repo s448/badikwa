@@ -10,7 +10,11 @@ class SentOtpVerificationSuccess extends ResetPasswordState {
   SentOtpVerificationSuccess(this.email);
 }
 
-class OtpVerificationSuccess extends ResetPasswordState {}
+class OtpVerificationSuccess extends ResetPasswordState {
+  final String email;
+
+  OtpVerificationSuccess(this.email);
+}
 
 class OtpVerificationError extends ResetPasswordState {
   final String? message;

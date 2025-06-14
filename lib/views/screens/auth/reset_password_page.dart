@@ -2,6 +2,7 @@ import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_event.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_state.dart';
 import 'package:prufcoach/core/utils/app_messages.dart';
+import 'package:prufcoach/views/screens/auth/otp_verification_page.dart';
 import 'package:prufcoach/views/widgets/buttons.dart';
 import 'package:prufcoach/views/widgets/decorations.dart';
 import 'package:flutter/material.dart';
@@ -32,15 +33,20 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         child: BlocConsumer<ResetPasswordBloc, ResetPasswordState>(
           listener: (context, state) {
             if (state is SentOtpVerificationSuccess) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => BlocProvider.value(
+                        value: BlocProvider.of<ResetPasswordBloc>(context),
+                        child: OtpVerificationPage(email: state.email),
+                      ),
+                ),
+              );
               appMessageShower(
                 context,
                 "Reset mail is sent",
                 "Check your email to reset your password",
-              );
-              Navigator.pushReplacementNamed(
-                context,
-                '/otp-verification',
-                arguments: state.email,
               );
             } else if (state is ResetPasswordError) {
               appMessageShower(context, "Error", state.message);

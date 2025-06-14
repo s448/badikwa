@@ -8,9 +8,9 @@ import 'package:prufcoach/models/user_model.dart';
 class AuthData {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://b0ce-196-154-3-110.ngrok-free.app/api/',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      baseUrl: 'https://eb37-196-154-1-206.ngrok-free.app/api/',
+      connectTimeout: const Duration(seconds: 50),
+      receiveTimeout: const Duration(seconds: 50),
       headers: {'Content-Type': 'application/json'},
     ),
   );
@@ -102,6 +102,13 @@ class AuthData {
 
   Future<ApiResponse<dynamic>> sendOTPViaEmail(String email) async {
     try {
+      var userExists = await checkUserExists(email);
+      if (!userExists) {
+        return ApiResponse(
+          success: false,
+          message: 'User with this email does not exist',
+        );
+      }
       final response = await _dio.post('otp/send-otp', data: {'email': email});
 
       final data = response.data;
@@ -169,6 +176,51 @@ class AuthData {
     } catch (e) {
       log('Sign out failed: $e');
       return false;
+    }
+  }
+
+  Future<bool> checkUserExists(String email) async {
+    try {
+      final response = await _dio.get(
+        'auth/check-exist',
+        queryParameters: {'email': email},
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as bool;
+      } else {
+        return false;
+      }
+    } on DioException catch (e) {
+      log('Check user exists failed: ${e.response?.data ?? e.message}');
+      return false;
+    }
+  }
+
+  // Method to reset password
+  Future<ApiResponse<dynamic>> resetPassword(
+    String email,
+    String newPassword,
+  ) async {
+    try {
+      final response = await _dio.post(
+        'auth/user-reset-password',
+        data: {'email': email, 'newPassword': newPassword},
+      );
+
+      final data = response.data;
+
+      if (response.statusCode == 200) {
+        return ApiResponse(success: true, message: data['message']);
+      } else {
+        return ApiResponse(success: false, message: data);
+      }
+    } on DioException catch (e) {
+      log('Reset password failed: ${e.response?.data ?? e.message}');
+      return ApiResponse(
+        success: false,
+        message: e.response?.data ?? 'Failed to reset password',
+      );
     }
   }
 }
