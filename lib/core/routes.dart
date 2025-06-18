@@ -3,7 +3,7 @@ import 'package:prufcoach/views/screens/auth/new_password_page.dart';
 import 'package:prufcoach/views/screens/auth/otp_verification_page.dart';
 import 'package:prufcoach/views/screens/auth/reset_password_page.dart';
 import 'package:prufcoach/views/screens/auth/signup_page.dart';
-import 'package:prufcoach/views/screens/home/home_page.dart';
+import 'package:prufcoach/views/screens/home/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:prufcoach/views/screens/preauth/landing_page.dart';
 
@@ -19,7 +19,7 @@ class AppRoutes {
       case signup:
         return MaterialPageRoute(builder: (_) => SignupPage());
       case home:
-        return MaterialPageRoute(builder: (_) => HomeScreen());
+        return MaterialPageRoute(builder: (_) => BottomNavBarPage());
       case resetpassword:
         return MaterialPageRoute(builder: (_) => ForgotPasswordPage());
       case login:

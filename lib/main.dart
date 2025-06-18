@@ -1,5 +1,6 @@
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_event.dart';
+import 'package:prufcoach/blocs/homeBloc/home_bloc.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
 import 'package:prufcoach/core/routes.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ void main() async {
         BlocProvider<ResetPasswordBloc>(
           create: (context) => ResetPasswordBloc(),
         ),
+        BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
       ],
       child: MyApp(),
     ),

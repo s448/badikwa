@@ -1,18 +1,21 @@
-abstract class HomeState {}
+import 'package:prufcoach/models/banner_model.dart';
 
-class HomeInitial extends HomeState {}
+class HomeState {
+  final List<BannerModel> banners;
+  final bool loading;
+  final String? error;
 
-class HomeLoading extends HomeState {}
+  HomeState({this.banners = const [], this.loading = false, this.error});
 
-class HomeLoaded extends HomeState {
-  final double latitude;
-  final double longitude;
-
-  HomeLoaded({required this.latitude, required this.longitude});
-}
-
-class HomeError extends HomeState {
-  final String message;
-
-  HomeError(this.message);
+  HomeState copyWith({
+    List<BannerModel>? banners,
+    bool? loading,
+    String? error,
+  }) {
+    return HomeState(
+      banners: banners ?? this.banners,
+      loading: loading ?? this.loading,
+      error: error,
+    );
+  }
 }

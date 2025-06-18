@@ -8,7 +8,7 @@ import 'package:prufcoach/models/user_model.dart';
 class AuthData {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://eb37-196-154-1-206.ngrok-free.app/api/',
+      baseUrl: 'https://f573-196-158-193-221.ngrok-free.app/api/',
       connectTimeout: const Duration(seconds: 50),
       receiveTimeout: const Duration(seconds: 50),
       headers: {'Content-Type': 'application/json'},
@@ -134,18 +134,20 @@ class AuthData {
 
     try {
       final response = await _dio.get(
-        '/validate-token',
+        'auth/validate-token',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 
       if (response.statusCode == 200) {
+        log("authenticated");
         return true; // token is valid
       }
       return false;
     } on DioException catch (e) {
+      log(e.toString());
       // You can check if status code is 401 for expired token
       if (e.response?.statusCode == 401) {
-        print("Token expired.");
+        log("Token expired.");
       }
       return false;
     }
