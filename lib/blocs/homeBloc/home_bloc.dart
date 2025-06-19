@@ -7,16 +7,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomePageData homePageData = HomePageData();
 
   HomeBloc() : super(HomeState()) {
-    on<LoadBannersEvent>((event, emit) async {
+    on<LoadHomePageEvent>((event, emit) async {
       emit(state.copyWith(loading: true, error: null));
-      final response = await homePageData.getAllBanners();
-
-      if (response.success) {
-        emit(state.copyWith(banners: response.response!, loading: false));
+      final banners = await homePageData.getAllBanners();
+      final examsRes = await homePageData.getAllExams();
+      if (examsRes.success) {
+        emit(
+          state.copyWith(
+            banners: banners.response!,
+            exams: examsRes.response,
+            loading: false,
+          ),
+        );
       } else {
         emit(
           state.copyWith(
-            error: response.message ?? 'Failed to load banners',
+            error: examsRes.message ?? 'Failed to load exams',
             loading: false,
           ),
         );

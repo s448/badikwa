@@ -2,13 +2,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:prufcoach/core/localStorage/auth_storage.dart';
 import 'package:prufcoach/core/localStorage/user_storage.dart';
+import 'package:prufcoach/core/utils/api_endpoint.dart' show endpoint;
 import 'package:prufcoach/models/Dto/api_response.dart';
 import 'package:prufcoach/models/user_model.dart';
 
 class AuthData {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://f573-196-158-193-221.ngrok-free.app/api/',
+      baseUrl: '$endpoint/api/',
       connectTimeout: const Duration(seconds: 50),
       receiveTimeout: const Duration(seconds: 50),
       headers: {'Content-Type': 'application/json'},
