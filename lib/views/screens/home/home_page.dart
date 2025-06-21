@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/homeBloc/home_bloc.dart';
 import 'package:prufcoach/blocs/homeBloc/home_event.dart';
 import 'package:prufcoach/blocs/homeBloc/home_state.dart';
+import 'package:prufcoach/core/routes.dart';
 import 'package:prufcoach/core/utils/url_launcher_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -142,20 +143,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const SizedBox(width: 8),
                                   Padding(
                                     padding: const EdgeInsets.all(4.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Text(
-                                        "Weiter machen",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.readyExam,
+                                          arguments: exam.id,
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "Weiter machen",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
