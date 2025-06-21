@@ -3,6 +3,7 @@ import 'package:prufcoach/views/screens/auth/new_password_page.dart';
 import 'package:prufcoach/views/screens/auth/otp_verification_page.dart';
 import 'package:prufcoach/views/screens/auth/reset_password_page.dart';
 import 'package:prufcoach/views/screens/auth/signup_page.dart';
+import 'package:prufcoach/views/screens/exam/exam_page.dart';
 import 'package:prufcoach/views/screens/exam/ready_page.dart';
 import 'package:prufcoach/views/screens/home/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String otp = '/otp-verification';
   static const String newpassword = '/new-password';
   static const String readyExam = '/ready-exam';
+  static const String exam = '/exam';
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case signup:
@@ -39,6 +41,8 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => ReadyPage(examId: settings.arguments as int),
         );
+      case exam:
+        return MaterialPageRoute(builder: (_) => ExamPage());
       default:
         return MaterialPageRoute(builder: (_) => LandingPage());
     }

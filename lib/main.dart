@@ -1,11 +1,13 @@
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_event.dart';
+import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
 import 'package:prufcoach/blocs/homeBloc/home_bloc.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
 import 'package:prufcoach/core/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prufcoach/data/exam_data.dart';
 
 import 'blocs/createAccountBloc/create_acc_bloc.dart';
 
@@ -27,6 +29,7 @@ void main() async {
           create: (context) => ResetPasswordBloc(),
         ),
         BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
+        BlocProvider<ExamBloc>(create: (context) => ExamBloc(ExamData())),
       ],
       child: MyApp(),
     ),

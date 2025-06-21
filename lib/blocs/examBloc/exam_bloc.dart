@@ -8,6 +8,25 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
 
   ExamBloc(this.examData) : super(ExamInitial()) {
     on<LoadExamById>(_onLoadExamById);
+    on<NextPartRequested>(_onNextPartRequested);
+  }
+
+  Future<void> _onNextPartRequested(
+    NextPartRequested event,
+    Emitter<ExamState> emit,
+  ) async {
+    if (state is ExamLoaded) {
+      final currentState = state as ExamLoaded;
+      final nextPartIndex = currentState.partIndex + 1;
+
+      if (nextPartIndex < 3) {
+        // Assuming there are 3 parts
+        emit(ExamLoaded(currentState.exam, partIndex: nextPartIndex));
+      } else {
+        // Handle exam completion logic here if needed
+        emit(ExamLoaded(currentState.exam, partIndex: nextPartIndex));
+      }
+    }
   }
 
   Future<void> _onLoadExamById(

@@ -8,7 +8,8 @@ class ExamLoading extends ExamState {}
 
 class ExamLoaded extends ExamState {
   final Exam exam;
-  ExamLoaded(this.exam);
+  final int partIndex;
+  ExamLoaded(this.exam, {this.partIndex = 0});
 }
 
 class ExamError extends ExamState {
