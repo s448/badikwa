@@ -1,10 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
+import 'package:prufcoach/core/utils/colors.dart';
+import 'package:prufcoach/models/exam_model.dart';
+import 'package:prufcoach/views/screens/exam/listeningPart/listening_skill_page.dart'; // Make sure you import your model
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -52,13 +54,21 @@ class _ExamPageState extends State<ExamPage> {
 
   @override
   Widget build(BuildContext context) {
-    final parts = [_buildPart1(), _buildPart2(), _buildPart3(), _buildPart4()];
-
     return BlocBuilder<ExamBloc, ExamState>(
       builder: (context, state) {
         if (state is ExamLoaded) {
           final partIndex = state.partIndex;
+          final exam = state.exam;
+
+          final parts = [
+            _buildPart1(exam, partIndex),
+            _buildPart2(exam, partIndex),
+            _buildPart3(exam, partIndex),
+            _buildPart4(exam, partIndex),
+          ];
+
           return Scaffold(
+            backgroundColor: AppColors.lightBackground,
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Column(
@@ -68,14 +78,16 @@ class _ExamPageState extends State<ExamPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        state.exam.skills[partIndex].name,
-                        style: TextStyle(
+                        exam.skills[partIndex].name,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          context.read<ExamBloc>().add(AbandonExam());
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(4.0),
                           decoration: BoxDecoration(
@@ -113,7 +125,7 @@ class _ExamPageState extends State<ExamPage> {
                       const SizedBox(height: 16),
                     ],
                   ),
-                  parts[partIndex],
+                  Expanded(child: parts[partIndex]),
                 ],
               ),
             ),
@@ -143,11 +155,22 @@ class _ExamPageState extends State<ExamPage> {
     );
   }
 
-  Widget _buildPart1() => const Center(child: Text("Hören & Lesen"));
+  // ✅ Each part now receives the exam and partIndex
+  Widget _buildPart1(Exam exam, int partIndex) =>
+      ListeningSkillPage(skill: exam.skills[0]);
 
-  Widget _buildPart2() => const Center(child: Text("Schreiben"));
+  Widget _buildPart2(Exam exam, int partIndex) {
+    final skill = exam.skills[partIndex];
+    return Center(child: Text("Teil 2: ${skill.name}"));
+  }
 
-  Widget _buildPart3() => const Center(child: Text("Sprechen"));
+  Widget _buildPart3(Exam exam, int partIndex) {
+    final skill = exam.skills[partIndex];
+    return Center(child: Text("Teil 3: ${skill.name}"));
+  }
 
-  Widget _buildPart4() => const Center(child: Text("Feedback & Abschluss"));
+  Widget _buildPart4(Exam exam, int partIndex) {
+    final skill = exam.skills[partIndex];
+    return Center(child: Text("Teil 4: ${skill.name}"));
+  }
 }

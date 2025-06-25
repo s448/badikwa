@@ -16,3 +16,5 @@ class ExamError extends ExamState {
   final String message;
   ExamError(this.message);
 }
+
+class ExamAbandoned extends ExamState {}

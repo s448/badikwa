@@ -8,3 +8,5 @@ class LoadExamById extends ExamEvent {
 class NextPartRequested extends ExamEvent {
   NextPartRequested();
 }
+
+class AbandonExam extends ExamEvent {}

@@ -1,15 +1,30 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prufcoach/controller/audio_controller.dart';
 import 'package:prufcoach/data/exam_data.dart';
 import 'exam_event.dart';
 import 'exam_state.dart';
 
 class ExamBloc extends Bloc<ExamEvent, ExamState> {
-  final ExamData examData;
+  final ExamData examData = ExamData();
+  final AudioController audioController = AudioController();
 
-  ExamBloc(this.examData) : super(ExamInitial()) {
+  ExamBloc() : super(ExamInitial()) {
     on<LoadExamById>(_onLoadExamById);
     on<NextPartRequested>(_onNextPartRequested);
+    on<AbandonExam>(_closeBloc);
   }
+
+  Future<void> _closeBloc(AbandonExam event, Emitter<ExamState> emit) async {
+    audioController.dispose();
+    emit(ExamAbandoned());
+    close();
+  }
+
+  // @override
+  // Future<void> close() {
+  //   audioController.dispose();
+  //   return super.close();
+  // }
 
   Future<void> _onNextPartRequested(
     NextPartRequested event,
@@ -36,6 +51,11 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
     emit(ExamLoading());
 
     final result = await examData.getExamById(event.examId);
+
+    await audioController.downloadAndPrepare(
+      result.response!.skills.first.audioUrl ?? "",
+      result.response!.id.toString(),
+    );
 
     if (result.success && result.response != null) {
       emit(ExamLoaded(result.response!));

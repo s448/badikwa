@@ -29,7 +29,7 @@ void main() async {
           create: (context) => ResetPasswordBloc(),
         ),
         BlocProvider<HomeBloc>(create: (context) => HomeBloc()),
-        BlocProvider<ExamBloc>(create: (context) => ExamBloc(ExamData())),
+        BlocProvider<ExamBloc>(create: (context) => ExamBloc()),
       ],
       child: MyApp(),
     ),
