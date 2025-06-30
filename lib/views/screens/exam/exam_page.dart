@@ -129,18 +129,18 @@ class _ExamPageState extends State<ExamPage> {
                 ],
               ),
             ),
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed:
-                    partIndex < parts.length - 1
-                        ? () {
-                          context.read<ExamBloc>().add(NextPartRequested());
-                        }
-                        : null,
-                child: Text(partIndex < parts.length - 1 ? 'Weiter' : 'Fertig'),
-              ),
-            ),
+            // bottomNavigationBar: Padding(
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: ElevatedButton(
+            //     onPressed:
+            //         partIndex < parts.length - 1
+            //             ? () {
+            //               context.read<ExamBloc>().add(NextPartRequested());
+            //             }
+            //             : null,
+            //     child: Text(partIndex < parts.length - 1 ? 'Weiter' : 'Fertig'),
+            //   ),
+            // ),
           );
         } else if (state is ExamLoading) {
           return const Center(child: CircularProgressIndicator());

@@ -5,6 +5,7 @@ import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
+import 'package:prufcoach/views/screens/exam/tale_page.dart';
 
 class ListeningSkillPage extends StatefulWidget {
   final Skill skill;
@@ -78,26 +79,25 @@ class _ListeningSkillPageState extends State<ListeningSkillPage> {
             return const SizedBox.shrink();
           },
         ),
+        // const SizedBox(height: 20),
+        // Text(
+        //   widget.skill.name,
+        //   style: Theme.of(context).textTheme.headlineMedium,
+        // ),
         const SizedBox(height: 20),
-        Text(
-          widget.skill.name,
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 10, // Example count
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('Listening Part ${index + 1}'),
-                onTap: () {
-                  // Handle part selection
-                },
-              );
-            },
-          ),
-        ),
+        Expanded(child: SkillTalesPage(tales: widget.skill.stories)),
       ],
     );
   }
 }
+
+// var sampleTales = [
+//   Tale(
+//     title: "Tale 1",
+//     content:
+//         "This is the first tale's content.ccccccccccccccccccccccccccccccccccccccc",
+//   ),
+//   Tale(title: "Tale 2", content: "This is the second tale's content."),
+//   Tale(title: "Tale 3", content: "This is the third tale's content."),
+//   Tale(title: "Tale 4", content: "This is the fourth tale's content."),
+// ];
