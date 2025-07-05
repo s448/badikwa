@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
+import 'package:prufcoach/core/utils/app_messages.dart';
+import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/views/widgets/buttons.dart';
 
 class ReadyPage extends StatelessWidget {
@@ -30,7 +33,13 @@ class ReadyPage extends StatelessWidget {
               BlocBuilder<ExamBloc, ExamState>(
                 builder: (context, state) {
                   if (state is ExamLoading) {
-                    return const CircularProgressIndicator();
+                    return const Center(
+                      child: CupertinoActivityIndicator(
+                        color: AppColors.primaryGreen,
+                        animating: true,
+                        radius: 20,
+                      ),
+                    );
                   } else if (state is ExamLoaded) {
                     return Text(
                       'in die ${state.exam.level} Prüfung für Zuwandere',
@@ -76,10 +85,26 @@ Wenn du bereit bist, tippe auf „Prüfung starten“.''',
                 ),
               ),
               const SizedBox(height: 20),
-              PrimaryButton(
-                child: const Text('Prüfung starten'),
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/exam');
+              BlocBuilder<ExamBloc, ExamState>(
+                builder: (context, state) {
+                  return PrimaryButton(
+                    onTap:
+                        (state is ExamLoaded)
+                            ? () {
+                              Navigator.pushReplacementNamed(context, '/exam');
+                            }
+                            : () {
+                              appMessageShower(
+                                context,
+                                'Fehler',
+                                'Die Prüfung konnte nicht geladen werden.',
+                              );
+                            },
+                    child:
+                        state is ExamLoaded
+                            ? const Text('Prüfung starten')
+                            : const Text('Lade...'),
+                  );
                 },
               ),
             ],

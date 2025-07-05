@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_event.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_state.dart';
@@ -87,8 +88,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                 ? SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.5,
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
                                     color: Colors.white,
                                   ),
                                 )

@@ -1,4 +1,5 @@
 import 'package:auth_buttons/auth_buttons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_bloc.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_event.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_state.dart';
@@ -180,8 +181,8 @@ class SignupPageState extends State<SignupPage> {
                                   ? SizedBox(
                                     width: 24,
                                     height: 24,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
+                                    child: CupertinoActivityIndicator(
+                                      radius: 15,
                                       color: Colors.white,
                                     ),
                                   )

@@ -1,4 +1,5 @@
 import 'package:auth_buttons/auth_buttons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_event.dart';
 import 'package:prufcoach/blocs/authBloc/auth_state.dart';
@@ -143,8 +144,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ? SizedBox(
                                   width: 24,
                                   height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.5,
+                                  child: CupertinoActivityIndicator(
+                                    radius: 15,
                                     color: Colors.white,
                                   ),
                                 )

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/resetPasswordBloc/reset_password_bloc.dart';
@@ -128,7 +129,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
                     return PrimaryButton(
                       child:
                           state is ResetPasswordLoading
-                              ? const CircularProgressIndicator(
+                              ? const CupertinoActivityIndicator(
                                 color: Colors.white,
                               )
                               : const Text(

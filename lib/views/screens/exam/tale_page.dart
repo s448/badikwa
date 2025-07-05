@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
 
-// The widget that displays each tale
 class TaleWidget extends StatefulWidget {
   final Story tale;
 
@@ -15,14 +14,14 @@ class TaleWidget extends StatefulWidget {
 }
 
 class _TaleWidgetState extends State<TaleWidget> {
-  // Store selected index for each question
-  late List<int> selectedIndexes = [-1];
+  late List<int> _selectedIndexes;
+
+  List<int> get selectedIndexes => _selectedIndexes;
 
   @override
   void initState() {
     super.initState();
-    // Initialize all selections to -1 (none selected)
-    selectedIndexes = List.filled(widget.tale.questions.length, -1);
+    _selectedIndexes = List.filled(widget.tale.questions.length, -1);
   }
 
   @override
@@ -42,88 +41,69 @@ class _TaleWidgetState extends State<TaleWidget> {
             widget.tale.title,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Text(
-            widget.tale.description,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
-          ),
+          Text(widget.tale.description, style: const TextStyle(fontSize: 17)),
           const SizedBox(height: 12),
           for (int i = 0; i < widget.tale.questions.length; i++)
-            ListTile(
-              title: Text(
-                "${i + 1}: ${widget.tale.questions[i].text}",
-                style: const TextStyle(fontSize: 16),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                    widget.tale.questions[i].choices.map((option) {
-                      int optionIndex = widget.tale.questions[i].choices
-                          .indexOf(option);
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndexes[i] = optionIndex;
-                              log(selectedIndexes[i].toString());
-                            });
-                          },
-
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${i + 1}: ${widget.tale.questions[i].text}",
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 4),
+                ...widget.tale.questions[i].choices.asMap().entries.map((
+                  entry,
+                ) {
+                  int optionIndex = entry.key;
+                  final option = entry.value;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedIndexes[i] = optionIndex;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                        color:
+                            _selectedIndexes[i] == optionIndex
+                                ? AppColors.primaryGreen
+                                : Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            String.fromCharCode(65 + optionIndex),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                               color:
-                                  selectedIndexes[i] == optionIndex
-                                      ? AppColors.primaryGreen
-                                      : Colors.white,
-                              border: Border.all(
-                                color: Colors.grey.shade300,
-                                width: 1,
-                              ),
+                                  _selectedIndexes[i] == optionIndex
+                                      ? Colors.white
+                                      : Colors.grey,
                             ),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    String.fromCharCode(65 + optionIndex),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color:
-                                          selectedIndexes[i] == optionIndex
-                                              ? Colors.white
-                                              : Colors.grey,
-                                    ),
-                                  ),
-                                  VerticalDivider(
-                                    width: 16,
-                                    thickness: 1,
-                                    color:
-                                        selectedIndexes[i] == optionIndex
-                                            ? Colors.white
-                                            : Colors.grey,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      option.text,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color:
-                                            selectedIndexes[i] == optionIndex
-                                                ? Colors.white
-                                                : Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              option.text,
+                              style: TextStyle(
+                                color:
+                                    _selectedIndexes[i] == optionIndex
+                                        ? Colors.white
+                                        : Colors.grey,
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    }).toList(),
-              ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
             ),
         ],
       ),
@@ -131,7 +111,6 @@ class _TaleWidgetState extends State<TaleWidget> {
   }
 }
 
-// Skill page with tale navigation
 class SkillTalesPage extends StatefulWidget {
   final List<Story> tales;
 
@@ -143,18 +122,34 @@ class SkillTalesPage extends StatefulWidget {
 
 class _SkillTalesPageState extends State<SkillTalesPage> {
   int currentIndex = 0;
+  final Map<int, List<int>> allAnswers = {};
+
+  late GlobalKey<_TaleWidgetState> taleWidgetKey;
+
+  @override
+  void initState() {
+    super.initState();
+    taleWidgetKey = GlobalKey<_TaleWidgetState>();
+  }
 
   void goToNextTale() {
+    final selected = taleWidgetKey.currentState?.selectedIndexes;
+    if (selected != null) {
+      allAnswers[currentIndex] = List.from(selected);
+    }
+
     if (currentIndex < widget.tales.length - 1) {
       setState(() {
         currentIndex++;
+        taleWidgetKey =
+            GlobalKey<
+              _TaleWidgetState
+            >(); // 👈 Force new state for the next tale
       });
     } else {
-      // Reached last tale — show message or finish
+      debugPrint("All answers: $allAnswers");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You have completed all tales in this skill!'),
-        ),
+        const SnackBar(content: Text("You’ve completed all tales!")),
       );
     }
   }
@@ -164,20 +159,34 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
     final tale = widget.tales[currentIndex];
 
     return Scaffold(
-      // width: MediaQuery.of(context).size.width,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Show current tale
-            TaleWidget(tale: tale),
-
-            // Navigation
-          ],
+        child: TaleWidget(
+          key: taleWidgetKey, // 👈 Give each tale its own widget state
+          tale: tale,
         ),
       ),
-      bottomNavigationBar: ElevatedButton(
-        onPressed: goToNextTale,
-        child: const Text("Next Tale"),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            backgroundColor: Colors.red,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+          ),
+          onPressed: goToNextTale,
+          child: Text(
+            currentIndex < widget.tales.length - 1
+                ? "Weiter zum Hörteil ${currentIndex + 2}"
+                : "Zur nächsten Lektion gehen",
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }

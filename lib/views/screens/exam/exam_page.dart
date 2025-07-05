@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
@@ -143,7 +144,7 @@ class _ExamPageState extends State<ExamPage> {
             // ),
           );
         } else if (state is ExamLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CupertinoActivityIndicator());
         } else if (state is ExamError) {
           return Center(child: Text('Fehler: ${state.message}'));
         }
