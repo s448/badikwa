@@ -1,3 +1,5 @@
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
@@ -8,9 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/createAccountBloc/create_acc_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'data/hive/user_answer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAnswersAdapter());
+  await Hive.openBox<UserAnswers>('answersBox');
   await SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],

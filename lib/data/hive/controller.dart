@@ -1,51 +1,35 @@
+import 'dart:developer';
+
 import 'package:hive/hive.dart';
-import 'package:prufcoach/data/hive/model.dart';
+import 'package:prufcoach/data/hive/user_answer.dart';
 
-class HiveController {
-  static const _boxName = 'answersBox';
+class HiveAnswerController {
+  static const String boxName = 'userAnswers';
 
-  /// Save user answers with key format: ExamId_TaleId_Index
   Future<void> saveAnswer({
     required String examId,
+    required String skillId,
     required String taleId,
-    required int index,
-    required Map<int, int> selectedAnswers,
+    required List<List<int>> answers,
   }) async {
-    final box = Hive.box<UserAnswer>(_boxName);
-    final key = _buildKey(examId, taleId, index);
-    final answer = UserAnswer(key: key, selectedAnswers: selectedAnswers);
-    await box.put(key, answer);
+    final box = await Hive.openBox<UserAnswers>(boxName);
+    final existing = box.get(examId);
+
+    final updated = existing ?? UserAnswers(examId: examId, answers: {});
+
+    updated.answers[skillId] ??= {};
+    updated.answers[skillId]![taleId] = answers;
+
+    await box.put(examId, updated);
   }
 
-  /// Get saved answer by key
-  UserAnswer? getAnswer(String examId, String taleId, int index) {
-    final box = Hive.box<UserAnswer>(_boxName);
-    final key = _buildKey(examId, taleId, index);
-    return box.get(key);
+  Future<UserAnswers?> getAnswers(String examId) async {
+    final box = await Hive.openBox<UserAnswers>(boxName);
+    return box.get(examId);
   }
 
-  /// Check if an answer exists
-  bool hasAnswer(String examId, String taleId, int index) {
-    final box = Hive.box<UserAnswer>(_boxName);
-    final key = _buildKey(examId, taleId, index);
-    return box.containsKey(key);
-  }
-
-  /// Delete a specific answer
-  Future<void> deleteAnswer(String examId, String taleId, int index) async {
-    final box = Hive.box<UserAnswer>(_boxName);
-    final key = _buildKey(examId, taleId, index);
-    await box.delete(key);
-  }
-
-  /// Clear all answers
-  Future<void> clearAllAnswers() async {
-    final box = Hive.box<UserAnswer>(_boxName);
-    await box.clear();
-  }
-
-  /// Private helper
-  String _buildKey(String examId, String taleId, int index) {
-    return "${examId}_$taleId\_$index";
+  Future<void> printAnswers(String examId) async {
+    final data = await getAnswers(examId);
+    log('🧠 Saved Answers for $examId:\n${data?.answers}');
   }
 }

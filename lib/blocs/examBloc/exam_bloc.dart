@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/controller/audio_controller.dart';
 import 'package:prufcoach/data/exam_data.dart';
@@ -31,15 +33,16 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
     Emitter<ExamState> emit,
   ) async {
     if (state is ExamLoaded) {
-      final currentState = state as ExamLoaded;
-      final nextPartIndex = currentState.partIndex + 1;
+      final current = state as ExamLoaded;
+      final nextIndex = current.partIndex + 1;
 
-      if (nextPartIndex < 3) {
-        // Assuming there are 3 parts
-        emit(ExamLoaded(currentState.exam, partIndex: nextPartIndex));
+      if (nextIndex < current.exam.skills.length) {
+        // Assuming there are 4 parts
+        log('Moving to part $nextIndex');
+        emit(ExamLoaded(current.exam, partIndex: nextIndex));
       } else {
         // Handle exam completion logic here if needed
-        emit(ExamLoaded(currentState.exam, partIndex: nextPartIndex));
+        emit(ExamCompleted(current.exam));
       }
     }
   }

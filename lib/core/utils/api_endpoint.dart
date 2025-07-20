@@ -1,1 +1,1 @@
-const endpoint = "https://a6e6-156-204-205-24.ngrok-free.app";
+const endpoint = "https://42359e03c681.ngrok-free.app";

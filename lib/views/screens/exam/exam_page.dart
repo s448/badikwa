@@ -7,7 +7,8 @@ import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
-import 'package:prufcoach/views/screens/exam/listeningPart/listening_skill_page.dart'; // Make sure you import your model
+import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
+import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart'; // Make sure you import your model
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -120,7 +121,7 @@ class _ExamPageState extends State<ExamPage> {
                         backgroundColor: Colors.grey[300],
                         minHeight: 20,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.redAccent,
+                          Colors.orangeAccent,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -130,25 +131,12 @@ class _ExamPageState extends State<ExamPage> {
                 ],
               ),
             ),
-            // bottomNavigationBar: Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: ElevatedButton(
-            //     onPressed:
-            //         partIndex < parts.length - 1
-            //             ? () {
-            //               context.read<ExamBloc>().add(NextPartRequested());
-            //             }
-            //             : null,
-            //     child: Text(partIndex < parts.length - 1 ? 'Weiter' : 'Fertig'),
-            //   ),
-            // ),
           );
         } else if (state is ExamLoading) {
           return const Center(child: CupertinoActivityIndicator());
         } else if (state is ExamError) {
           return Center(child: Text('Fehler: ${state.message}'));
         }
-
         return const Scaffold(
           body: Center(child: Text('Keine Prüfung geladen')),
         );
@@ -158,12 +146,9 @@ class _ExamPageState extends State<ExamPage> {
 
   // ✅ Each part now receives the exam and partIndex
   Widget _buildPart1(Exam exam, int partIndex) =>
-      ListeningSkillPage(skill: exam.skills[0]);
+      ListeningSkillPage(exam: exam);
 
-  Widget _buildPart2(Exam exam, int partIndex) {
-    final skill = exam.skills[partIndex];
-    return Center(child: Text("Teil 2: ${skill.name}"));
-  }
+  Widget _buildPart2(Exam exam, int partIndex) => ReadingSkillPage(exam: exam);
 
   Widget _buildPart3(Exam exam, int partIndex) {
     final skill = exam.skills[partIndex];

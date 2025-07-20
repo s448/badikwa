@@ -18,3 +18,8 @@ class ExamError extends ExamState {
 }
 
 class ExamAbandoned extends ExamState {}
+
+class ExamCompleted extends ExamState {
+  final Exam exam;
+  ExamCompleted(this.exam);
+}
