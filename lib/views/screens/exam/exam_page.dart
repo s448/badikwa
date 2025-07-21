@@ -8,7 +8,7 @@ import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
 import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
-import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart'; // Make sure you import your model
+import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart';
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -59,14 +59,13 @@ class _ExamPageState extends State<ExamPage> {
     return BlocBuilder<ExamBloc, ExamState>(
       builder: (context, state) {
         if (state is ExamLoaded) {
-          final partIndex = state.partIndex;
+          final skillIndex = state.skillIndex;
           final exam = state.exam;
 
           final parts = [
-            _buildPart1(exam, partIndex),
-            _buildPart2(exam, partIndex),
-            _buildPart3(exam, partIndex),
-            _buildPart4(exam, partIndex),
+            _buildPart1(exam),
+            _buildPart2(exam),
+            _buildPart3(exam),
           ];
 
           return Scaffold(
@@ -80,7 +79,7 @@ class _ExamPageState extends State<ExamPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        exam.skills[partIndex].name,
+                        exam.skills[skillIndex].name,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -127,7 +126,7 @@ class _ExamPageState extends State<ExamPage> {
                       const SizedBox(height: 16),
                     ],
                   ),
-                  Expanded(child: parts[partIndex]),
+                  Expanded(child: parts[skillIndex]),
                 ],
               ),
             ),
@@ -145,18 +144,12 @@ class _ExamPageState extends State<ExamPage> {
   }
 
   // ✅ Each part now receives the exam and partIndex
-  Widget _buildPart1(Exam exam, int partIndex) =>
-      ListeningSkillPage(exam: exam);
+  Widget _buildPart1(Exam exam) => ListeningSkillPage(exam: exam);
 
-  Widget _buildPart2(Exam exam, int partIndex) => ReadingSkillPage(exam: exam);
+  Widget _buildPart2(Exam exam) => ReadingSkillPage(exam: exam);
 
-  Widget _buildPart3(Exam exam, int partIndex) {
-    final skill = exam.skills[partIndex];
+  Widget _buildPart3(Exam exam) {
+    final skill = exam.skills[2];
     return Center(child: Text("Teil 3: ${skill.name}"));
-  }
-
-  Widget _buildPart4(Exam exam, int partIndex) {
-    final skill = exam.skills[partIndex];
-    return Center(child: Text("Teil 4: ${skill.name}"));
   }
 }

@@ -9,4 +9,9 @@ class NextPartRequested extends ExamEvent {
   NextPartRequested();
 }
 
+class BriefingRequested extends ExamEvent {
+  final int briefingIndex;
+  BriefingRequested(this.briefingIndex);
+}
+
 class AbandonExam extends ExamEvent {}

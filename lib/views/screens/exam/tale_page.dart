@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:prufcoach/data/hive/controller.dart';
 import 'package:prufcoach/models/enums/questions_types.dart';
 import 'package:prufcoach/models/exam_model.dart';
@@ -12,8 +13,7 @@ import 'package:prufcoach/views/widgets/questions/undescriptive_single_choice_qu
 
 class TaleWidget extends StatefulWidget {
   final Story tale;
-
-  const TaleWidget({Key? key, required this.tale}) : super(key: key);
+  const TaleWidget({super.key, required this.tale});
 
   @override
   State<TaleWidget> createState() => _TaleWidgetState();
@@ -39,7 +39,7 @@ class _TaleWidgetState extends State<TaleWidget> {
           widget.tale.title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        Text(widget.tale.description),
+        buildDescriptionAsHTML(context, widget.tale.description),
         const SizedBox(height: 12),
         for (int i = 0; i < widget.tale.questions.length; i++)
           Column(
@@ -215,4 +215,25 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
       ),
     );
   }
+}
+
+Widget buildDescriptionAsHTML(BuildContext context, String description) {
+  return Html(
+    data: """
+        $description
+        """,
+    extensions: [
+      TagExtension(tagsToExtend: {"flutter"}, child: const FlutterLogo()),
+    ],
+    style: {
+      "p.fancy": Style(
+        textAlign: TextAlign.center,
+        padding: HtmlPaddings.all(0),
+        backgroundColor: Colors.grey,
+        margin: Margins(left: Margin(10, Unit.px), right: Margin.auto()),
+
+        fontWeight: FontWeight.bold,
+      ),
+    },
+  );
 }

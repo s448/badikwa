@@ -3,8 +3,10 @@ import 'package:prufcoach/views/screens/auth/new_password_page.dart';
 import 'package:prufcoach/views/screens/auth/otp_verification_page.dart';
 import 'package:prufcoach/views/screens/auth/reset_password_page.dart';
 import 'package:prufcoach/views/screens/auth/signup_page.dart';
+import 'package:prufcoach/views/screens/exam/Skills/briefingPages/reading_briefing_page.dart';
+import 'package:prufcoach/views/screens/exam/Skills/briefingPages/writing_briefing_page.dart';
 import 'package:prufcoach/views/screens/exam/exam_page.dart';
-import 'package:prufcoach/views/screens/exam/ready_page.dart';
+import 'package:prufcoach/views/screens/exam/exam_briefing_page.dart';
 import 'package:prufcoach/views/screens/home/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:prufcoach/views/screens/preauth/landing_page.dart';
@@ -18,6 +20,8 @@ class AppRoutes {
   static const String newpassword = '/new-password';
   static const String readyExam = '/ready-exam';
   static const String exam = '/exam';
+  static const String readingBriefing = '/reading-briefing';
+  static const String writingBriefing = '/writing-briefing';
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case signup:
@@ -43,6 +47,22 @@ class AppRoutes {
         );
       case exam:
         return MaterialPageRoute(builder: (_) => ExamPage());
+      case readingBriefing:
+        return MaterialPageRoute(
+          builder:
+              (_) => ReadingBriefingPage(
+                // exam: settings.arguments as Exam,
+                briefingIndex: 1,
+              ),
+        );
+      case writingBriefing:
+        return MaterialPageRoute(
+          builder:
+              (_) => WritingBriefingPage(
+                // exam: settings.arguments as Exam,
+                briefingIndex: 2,
+              ),
+        );
       default:
         return MaterialPageRoute(builder: (_) => LandingPage());
     }

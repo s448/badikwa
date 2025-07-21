@@ -34,12 +34,11 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
   ) async {
     if (state is ExamLoaded) {
       final current = state as ExamLoaded;
-      final nextIndex = current.partIndex + 1;
+      final nextIndex = current.skillIndex + 1;
 
       if (nextIndex < current.exam.skills.length) {
-        // Assuming there are 4 parts
         log('Moving to part $nextIndex');
-        emit(ExamLoaded(current.exam, partIndex: nextIndex));
+        emit(ExamLoaded(current.exam, skillIndex: nextIndex));
       } else {
         // Handle exam completion logic here if needed
         emit(ExamCompleted(current.exam));
@@ -61,7 +60,7 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
     );
 
     if (result.success && result.response != null) {
-      emit(ExamLoaded(result.response!));
+      emit(ExamLoaded(result.response!, skillIndex: 0));
     } else {
       emit(ExamError(result.message ?? 'Failed to load exam'));
     }
