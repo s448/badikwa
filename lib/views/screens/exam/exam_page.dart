@@ -7,8 +7,10 @@ import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
+import 'package:prufcoach/views/screens/exam/Skills/briefingPages/exam_ending_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart';
+import 'package:prufcoach/views/screens/exam/Skills/writing_skill_page.dart';
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -148,8 +150,5 @@ class _ExamPageState extends State<ExamPage> {
 
   Widget _buildPart2(Exam exam) => ReadingSkillPage(exam: exam);
 
-  Widget _buildPart3(Exam exam) {
-    final skill = exam.skills[2];
-    return Center(child: Text("Teil 3: ${skill.name}"));
-  }
+  Widget _buildPart3(Exam exam) => WritingSkillPage(exam: exam);
 }

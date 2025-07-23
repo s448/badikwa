@@ -218,22 +218,24 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
 }
 
 Widget buildDescriptionAsHTML(BuildContext context, String description) {
-  return Html(
-    data: """
+  return SingleChildScrollView(
+    child: Html(
+      data: """
         $description
-        """,
-    extensions: [
-      TagExtension(tagsToExtend: {"flutter"}, child: const FlutterLogo()),
-    ],
-    style: {
-      "p.fancy": Style(
-        textAlign: TextAlign.center,
-        padding: HtmlPaddings.all(0),
-        backgroundColor: Colors.grey,
-        margin: Margins(left: Margin(10, Unit.px), right: Margin.auto()),
+          """,
+      extensions: [
+        TagExtension(tagsToExtend: {"flutter"}, child: const FlutterLogo()),
+      ],
+      style: {
+        "p.fancy": Style(
+          textAlign: TextAlign.center,
+          padding: HtmlPaddings.all(0),
+          backgroundColor: Colors.grey,
+          margin: Margins(left: Margin(10, Unit.px), right: Margin.auto()),
 
-        fontWeight: FontWeight.bold,
-      ),
-    },
+          fontWeight: FontWeight.bold,
+        ),
+      },
+    ),
   );
 }
