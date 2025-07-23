@@ -19,49 +19,57 @@ class LandingPage extends StatelessWidget {
           }
         },
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              Image.asset(
-                "assets/illusts/landing.png",
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-              ),
-              GestureDetector(
-                onTap:
-                    () => Navigator.pushReplacementNamed(
-                      context,
-                      AppRoutes.login,
-                    ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    padding: EdgeInsets.all(16),
+          child: SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    "assets/illusts/landing.png",
                     width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: AppColors.primaryGreen,
-                        width: 1,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap:
+                      () => Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.login,
                       ),
-                      borderRadius: BorderRadius.circular(6),
-                      color: Colors.transparent,
-                    ),
-                    child: Text(
-                      "Anmelden",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryGreen,
-                        fontSize: 18,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.primaryGreen,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.transparent,
+                      ),
+                      child: Text(
+                        "Anmelden",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryGreen,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            ],
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+              ],
+            ),
           ),
         ),
       ),
