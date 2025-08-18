@@ -7,7 +7,6 @@ import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
-import 'package:prufcoach/views/screens/exam/Skills/briefingPages/exam_ending_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/writing_skill_page.dart';
