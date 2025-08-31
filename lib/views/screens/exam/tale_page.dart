@@ -45,7 +45,7 @@ class _TaleWidgetState extends State<TaleWidget> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('${i + 1}. ${widget.tale.questions[i].text}'),
+              Text('${i + 1}. ${widget.tale.questions[i].questionText}'),
               const SizedBox(height: 4),
               _buildQuestionWidget(widget.tale.questions[i], i),
               const SizedBox(height: 12),

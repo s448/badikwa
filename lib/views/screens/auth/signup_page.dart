@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_bloc.dart';
@@ -34,7 +36,8 @@ class SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  bool _passwordVisibility = false;
+  bool _passwordVisibility = true;
+  bool _confirmPasswordVisibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,7 @@ class SignupPageState extends State<SignupPage> {
           if (state is CreateAccSuccessState) {
             Navigator.pushReplacementNamed(context, AppRoutes.home);
           } else if (state is CreateAccFailedState) {
+            log("Failed to create account: ${state.msg}");
             appMessageShower(
               context,
               "Failed to create account",
@@ -138,12 +142,13 @@ class SignupPageState extends State<SignupPage> {
                       isPassword: true,
                       togglePasswordVisibility: () {
                         setState(() {
-                          _passwordVisibility = !_passwordVisibility;
+                          _confirmPasswordVisibility =
+                              !_confirmPasswordVisibility;
                         });
                       },
-                      obscureText: _passwordVisibility,
+                      obscureText: _confirmPasswordVisibility,
                     ),
-                    obscureText: _passwordVisibility,
+                    obscureText: _confirmPasswordVisibility,
                     validator:
                         (v) =>
                             v != _passwordController.text

@@ -14,4 +14,9 @@ class BriefingRequested extends ExamEvent {
   BriefingRequested(this.briefingIndex);
 }
 
+class FinishExam extends ExamEvent {
+  // final Exam exam;
+  FinishExam();
+}
+
 class AbandonExam extends ExamEvent {}

@@ -18,7 +18,7 @@ class MultiChoiceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children:
-          question.choices.asMap().entries.map((entry) {
+          question.answers.asMap().entries.map((entry) {
             int index = entry.key;
             var choice = entry.value;
             bool selected = selectedIndexes.contains(index);

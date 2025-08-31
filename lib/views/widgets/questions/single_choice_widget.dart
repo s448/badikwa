@@ -19,7 +19,7 @@ class SingleChoiceWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children:
-          question.choices.asMap().entries.map((entry) {
+          question.answers.asMap().entries.map((entry) {
             int index = entry.key;
             var choice = entry.value;
 

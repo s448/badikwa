@@ -24,7 +24,7 @@ class _MatchingChoicesPageState extends State<MatchingChoicesPage> {
   @override
   void initState() {
     super.initState();
-    allOptions = widget.question.choices.map((c) => c.text).toList();
+    allOptions = widget.question.answers.map((c) => c.text).toList();
 
     // Ensure selectedIndexes has exactly 3 items
     while (widget.selectedIndexes.length < 3) {

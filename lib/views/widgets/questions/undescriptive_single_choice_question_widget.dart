@@ -23,7 +23,7 @@ class _SelectableChipsQuestionState extends State<SelectableChipsQuestion> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(widget.question.choices.length, (qIndex) {
+      children: List.generate(widget.question.answers.length, (qIndex) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -33,14 +33,14 @@ class _SelectableChipsQuestionState extends State<SelectableChipsQuestion> {
               Expanded(
                 child: Wrap(
                   spacing: 8,
-                  children: List.generate(widget.question.choices.length, (
+                  children: List.generate(widget.question.answers.length, (
                     optIndex,
                   ) {
                     bool isSelected = widget.selectedIndex == optIndex;
 
                     return ChoiceChip(
                       label: Text(
-                        widget.question.choices[optIndex].text,
+                        widget.question.answers[optIndex].text,
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black,
                         ),

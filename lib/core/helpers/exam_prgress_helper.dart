@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:prufcoach/data/hive/user_answer.dart';
@@ -15,13 +17,23 @@ class ExamProgressHelper {
 
   static int countAnsweredQuestions(Box<UserAnswers> box, String examId) {
     final userAnswers = box.get(examId);
-
     if (userAnswers == null || userAnswers.answers.isEmpty) return 0;
 
     int count = 0;
 
-    userAnswers.answers.forEach((key, answer) {
-      count++;
+    userAnswers.answers.forEach((skillId, tales) {
+      // tales is Map<taleId, List<List<int>>>
+      (tales as Map).forEach((taleId, questionsLists) {
+        // questionsLists is List<List<int>>
+        (questionsLists as List).forEach((answerList) {
+          if (answerList is List) {
+            // Count this question if it has real answers (not empty or [-1])
+            if (answerList.isNotEmpty && answerList.any((a) => a != -1)) {
+              count++;
+            }
+          }
+        });
+      });
     });
 
     return count;
@@ -32,11 +44,14 @@ class ExamProgressHelper {
     if (total == 0) return 0.0;
 
     final answered = countAnsweredQuestions(box, exam.id.toString());
+    log(total.toString());
+    log(answered.toString());
     return answered / total;
   }
 
   static int calculatePercentage(Box<UserAnswers> box, Exam exam) {
     final progress = calculateProgress(box, exam);
+    log('Progress: $progress');
     return (progress * 100).round();
   }
 

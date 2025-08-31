@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/controller/audio_controller.dart';
+import 'package:prufcoach/core/helpers/exam_validation_helper.dart';
 import 'package:prufcoach/data/exam_data.dart';
+import 'package:prufcoach/data/hive/controller.dart';
 import 'exam_event.dart';
 import 'exam_state.dart';
 
@@ -13,7 +15,23 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
   ExamBloc() : super(ExamInitial()) {
     on<LoadExamById>(_onLoadExamById);
     on<NextPartRequested>(_onNextPartRequested);
+    on<FinishExam>(_finishExam);
     on<AbandonExam>(_closeBloc);
+  }
+
+  Future<void> _finishExam(FinishExam event, Emitter<ExamState> emit) async {
+    final current = state as ExamLoaded;
+    final answerSheet = await HiveAnswerController().getAnswers(
+      current.exam.id.toString(),
+    );
+
+    final score = ExamValidationHelper.calculateExamScore(
+      current.exam,
+      answerSheet!,
+    );
+
+    audioController.dispose();
+    emit(ExamCompleted(score));
   }
 
   Future<void> _closeBloc(AbandonExam event, Emitter<ExamState> emit) async {
@@ -21,12 +39,6 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
     emit(ExamAbandoned());
     close();
   }
-
-  // @override
-  // Future<void> close() {
-  //   audioController.dispose();
-  //   return super.close();
-  // }
 
   Future<void> _onNextPartRequested(
     NextPartRequested event,
@@ -41,7 +53,7 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
         emit(ExamLoaded(current.exam, skillIndex: nextIndex));
       } else {
         // Handle exam completion logic here if needed
-        emit(ExamCompleted(current.exam));
+        emit(ExamCompleted(0.0));
       }
     }
   }

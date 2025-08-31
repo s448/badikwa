@@ -57,6 +57,8 @@ class Skill {
               .toList(),
     );
   }
+
+  get tales => null;
 }
 
 class Story {
@@ -89,46 +91,46 @@ class Story {
 class Question {
   final int id;
   final String type;
-  final String text;
+  final String questionText;
   final String? explanation;
   final int score;
-  final List<Choice> choices;
+  final List<Answer> answers;
 
   Question({
     required this.id,
     required this.type,
-    required this.text,
+    required this.questionText,
     this.explanation,
     required this.score,
-    required this.choices,
+    required this.answers,
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
       id: json['id'],
       type: json['type'],
-      text: json['text'],
+      questionText: json['questionText'] ?? json['text'],
       explanation: json['explanation'],
       score: json['score'],
-      choices:
-          (json['choices'] as List)
-              .map((choice) => Choice.fromJson(choice))
+      answers:
+          (json['answers'] as List)
+              .map((answer) => Answer.fromJson(answer))
               .toList(),
     );
   }
 }
 
-class Choice {
+class Answer {
   final int id;
   final String text;
   final bool isCorrect;
 
-  Choice({required this.id, required this.text, required this.isCorrect});
+  Answer({required this.id, required this.text, required this.isCorrect});
 
-  factory Choice.fromJson(Map<String, dynamic> json) {
-    return Choice(
+  factory Answer.fromJson(Map<String, dynamic> json) {
+    return Answer(
       id: json['id'],
-      text: json['text'],
+      text: json['questionText'] ?? json['text'],
       isCorrect: json['isCorrect'],
     );
   }
