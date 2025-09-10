@@ -16,7 +16,7 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
     on<LoadExamById>(_onLoadExamById);
     on<NextPartRequested>(_onNextPartRequested);
     on<FinishExam>(_finishExam);
-    on<AbandonExam>(_closeBloc);
+    // on<AbandonExam>(_closeBloc);
   }
 
   Future<void> _finishExam(FinishExam event, Emitter<ExamState> emit) async {
@@ -30,15 +30,17 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
       answerSheet!,
     );
 
+    log("Exam finished with score: $score");
+
     audioController.dispose();
     emit(ExamCompleted(score));
   }
 
-  Future<void> _closeBloc(AbandonExam event, Emitter<ExamState> emit) async {
-    audioController.dispose();
-    emit(ExamAbandoned());
-    close();
-  }
+  // Future<void> _closeBloc(AbandonExam event, Emitter<ExamState> emit) async {
+  //   audioController.dispose();
+  //   emit(ExamAbandoned());
+  //   // close();
+  // }
 
   Future<void> _onNextPartRequested(
     NextPartRequested event,

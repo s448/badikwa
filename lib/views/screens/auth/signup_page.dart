@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_bloc.dart';
 import 'package:prufcoach/blocs/createAccountBloc/create_acc_event.dart';
@@ -204,41 +203,43 @@ class SignupPageState extends State<SignupPage> {
                     ),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                  Text(
-                    "Order weiter mit",
-                    style: TextStyle(
-                      color: AppColors.primaryGreen,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GoogleAuthButton(
-                        onPressed: () {},
-                        themeMode: ThemeMode.light,
-                        materialStyle: ButtonStyle(),
-                        style: AuthButtonStyle(
-                          iconBackground: Colors.transparent,
-                          buttonType: AuthButtonType.icon,
-                          iconType: AuthIconType.secondary,
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      FacebookAuthButton(
-                        onPressed: () {},
-                        themeMode: ThemeMode.light,
-                        materialStyle: ButtonStyle(),
-                        style: AuthButtonStyle(
-                          iconBackground: Colors.transparent,
-                          buttonType: AuthButtonType.icon,
-                          iconType: AuthIconType.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Text(
+                  //   "Order weiter mit",
+                  //   style: TextStyle(
+                  //     color: AppColors.primaryGreen,
+                  //     fontSize: 12,
+                  //     fontWeight: FontWeight.w700,
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 5),
+
+                  ///FREEZED FOR NOW
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     GoogleAuthButton(
+                  //       onPressed: () {},
+                  //       themeMode: ThemeMode.light,
+                  //       materialStyle: ButtonStyle(),
+                  //       style: AuthButtonStyle(
+                  //         iconBackground: Colors.transparent,
+                  //         buttonType: AuthButtonType.icon,
+                  //         iconType: AuthIconType.secondary,
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 15),
+                  //     FacebookAuthButton(
+                  //       onPressed: () {},
+                  //       themeMode: ThemeMode.light,
+                  //       materialStyle: ButtonStyle(),
+                  //       style: AuthButtonStyle(
+                  //         iconBackground: Colors.transparent,
+                  //         buttonType: AuthButtonType.icon,
+                  //         iconType: AuthIconType.secondary,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   Text(
                     "Hasu du kein konto ?",

@@ -16,7 +16,7 @@ class WritingSkillPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ExamBloc, ExamState>(
       listener: (context, state) {
-        if (state is ExamAbandoned) {
+        if (state is ExamCompleted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => ExamEndingPage()),
@@ -45,7 +45,7 @@ class WritingSkillPage extends StatelessWidget {
               padding: const EdgeInsets.all(16),
             ),
             onPressed: () {
-              context.read<ExamBloc>().add(AbandonExam());
+              context.read<ExamBloc>().add(FinishExam());
             },
             child: Text(
               'Weiter zum Teil Schreiben',

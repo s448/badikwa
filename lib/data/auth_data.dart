@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:prufcoach/core/helpers/jwt_decoder.dart' as JwtService;
 import 'package:prufcoach/core/localStorage/auth_storage.dart';
 import 'package:prufcoach/core/localStorage/user_storage.dart';
 import 'package:prufcoach/core/utils/api_endpoint.dart' show endpoint;
@@ -31,6 +32,12 @@ class AuthData {
       if (response.statusCode == 200) {
         await AuthStorage.saveTokens(data['accessToken'], data['refreshToken']);
         final loginResponse = LoginResponse.fromJson(data);
+        final token = data['accessToken'];
+        final userId = await JwtService.getUserIdFromToken(token);
+        final LocalUser user = await _getUserById(userId ?? "-1");
+        log("User fetched: ${user.fullName}, ${user.email}");
+        await UserStorage.saveUserData(user.id, user.fullName, user.email);
+        log("User data saved: ${user.fullName}, ${user.email}");
         return ApiResponse(
           success: true,
           response: loginResponse,
@@ -68,7 +75,11 @@ class AuthData {
 
       final data = response.data;
 
-      await UserStorage.saveUserData(data['id'], data['fullName'] ?? user.name);
+      await UserStorage.saveUserData(
+        data['id'],
+        data['fullName'] ?? user.name,
+        data['email'] ?? user.email,
+      );
 
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||
@@ -224,6 +235,33 @@ class AuthData {
         success: false,
         message: e.response?.data ?? 'Failed to reset password',
       );
+    }
+  }
+
+  _getUserById(String userId) async {
+    try {
+      final accessToken = await AuthStorage.getAccessToken();
+      if (accessToken == null) return null;
+      int id = int.parse(userId);
+      final response = await _dio.get(
+        'user/get-user/$id',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        log(data['fullName']);
+        return LocalUser(
+          email: data['email'],
+          id: data['id'],
+          fullName: data['fullName'],
+        );
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      log('Get user by ID failed: ${e.response?.data ?? e.message}');
+      return null;
     }
   }
 }

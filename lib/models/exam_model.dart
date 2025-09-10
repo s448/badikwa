@@ -65,14 +65,12 @@ class Story {
   final int id;
   final String title;
   final String description;
-  final String? audioUrl;
   final List<Question> questions;
 
   Story({
     required this.id,
     required this.title,
     required this.description,
-    this.audioUrl,
     required this.questions,
   });
 
@@ -81,7 +79,6 @@ class Story {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      audioUrl: json['audioUrl'],
       questions:
           (json['questions'] as List).map((q) => Question.fromJson(q)).toList(),
     );

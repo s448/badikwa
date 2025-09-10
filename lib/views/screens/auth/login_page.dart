@@ -1,5 +1,8 @@
-import 'package:auth_buttons/auth_buttons.dart';
+import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_event.dart';
 import 'package:prufcoach/blocs/authBloc/auth_state.dart';
@@ -8,8 +11,6 @@ import 'package:prufcoach/core/utils/app_messages.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/views/widgets/buttons.dart';
 import 'package:prufcoach/views/widgets/decorations.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,6 +23,90 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _passwordVisibility = true;
 
+  // login attempt management
+  static const int maxAttempts = 3;
+  static const int cooldownSeconds = 60;
+  int _failedAttempts = 0;
+  int _remainingCooldown = 0;
+  Timer? _timer;
+
+  void _startCooldown() {
+    _remainingCooldown = cooldownSeconds;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingCooldown <= 0) {
+        timer.cancel();
+        setState(() {
+          _failedAttempts = 0;
+          _remainingCooldown = 0;
+        });
+      } else {
+        setState(() {
+          _remainingCooldown--;
+        });
+      }
+    });
+  }
+
+  void _handleFailure(String message) {
+    _failedAttempts++;
+    if (_failedAttempts >= maxAttempts) {
+      _startCooldown();
+      appMessageShower(
+        context,
+        "Login gesperrt",
+        "Zu viele Fehlversuche. Bitte warte 60 Sekunden.",
+      );
+    } else {
+      appMessageShower(
+        context,
+        "Failed to login",
+        "$message (Versuche: $_failedAttempts von $maxAttempts)",
+      );
+    }
+  }
+
+  void _handleSuccess() {
+    _failedAttempts = 0;
+    _timer?.cancel();
+    _remainingCooldown = 0;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    });
+  }
+
+  void _onLoginPressed() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bitte alle Felder ausfüllen')),
+      );
+      return;
+    }
+    if (_remainingCooldown > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Bitte warte $_remainingCooldown Sekunden vor erneutem Versuch",
+          ),
+        ),
+      );
+      return;
+    }
+    context.read<AuthBloc>().add(
+      AuthLoginRequestedEvent(email: email, password: password),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,13 +114,10 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoginSuccessState) {
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
+            _handleSuccess();
           } else if (state is AuthFailureState) {
-            appMessageShower(
-              context,
-              "Failed to create account",
-              "${state.message}",
-            );
+            log(state.message.toString());
+            _handleFailure(state.message ?? "Unbekannter Fehler");
           }
         },
         child: Padding(
@@ -47,6 +129,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
+                // logo
                 SizedBox(
                   child: Image.asset(
                     "assets/icons/logo.png",
@@ -63,7 +146,6 @@ class _LoginPageState extends State<LoginPage> {
                     color: AppColors.primaryGreen,
                   ),
                 ),
-
                 Text(
                   "Dein Deutsch-Abenteuer wartet, jetzt anmelden!",
                   style: TextStyle(
@@ -73,6 +155,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+
+                // email
                 TextField(
                   cursorColor: AppColors.primaryGreen,
                   controller: _emailController,
@@ -82,7 +166,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
+
+                // password
                 TextField(
                   cursorColor: AppColors.primaryGreen,
                   controller: _passwordController,
@@ -99,7 +185,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   obscureText: _passwordVisibility,
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
+
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
@@ -118,30 +205,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+
+                // login button
                 GestureDetector(
-                  onTap: () {
-                    final email = _emailController.text.trim();
-                    final password = _passwordController.text.trim();
-                    if (email.isNotEmpty && password.isNotEmpty) {
-                      context.read<AuthBloc>().add(
-                        AuthLoginRequestedEvent(
-                          email: email,
-                          password: password,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please fill in all fields')),
-                      );
-                    }
-                  },
+                  onTap: _onLoginPressed,
                   child: BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       final isLoading = state is AuthLoadingState;
                       return PrimaryButton(
                         child:
                             isLoading
-                                ? SizedBox(
+                                ? const SizedBox(
                                   width: 24,
                                   height: 24,
                                   child: CupertinoActivityIndicator(
@@ -150,8 +224,10 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 )
                                 : Text(
-                                  "Anmelden",
-                                  style: TextStyle(
+                                  _remainingCooldown > 0
+                                      ? "Bitte warten ($_remainingCooldown s)"
+                                      : "Anmelden",
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -162,43 +238,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                Text(
-                  "Order weiter mit",
-                  style: TextStyle(
-                    color: AppColors.primaryGreen,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
+                const SizedBox(height: 12),
+
+                // show attempts info
+                if (_remainingCooldown == 0 && _failedAttempts > 0)
+                  Text(
+                    "Fehlversuche: $_failedAttempts von $maxAttempts",
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
                   ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GoogleAuthButton(
-                      onPressed: () {},
-                      themeMode: ThemeMode.light,
-                      materialStyle: ButtonStyle(),
-                      style: AuthButtonStyle(
-                        iconBackground: Colors.transparent,
-                        buttonType: AuthButtonType.icon,
-                        iconType: AuthIconType.secondary,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    FacebookAuthButton(
-                      onPressed: () {},
-                      themeMode: ThemeMode.light,
-                      materialStyle: ButtonStyle(),
-                      style: AuthButtonStyle(
-                        iconBackground: Colors.transparent,
-                        buttonType: AuthButtonType.icon,
-                        iconType: AuthIconType.secondary,
-                      ),
-                    ),
-                  ],
-                ),
+                if (_remainingCooldown > 0)
+                  Text(
+                    "Login gesperrt für $_remainingCooldown Sekunden",
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+
                 Text(
                   "Noch kein konto ?",
                   style: TextStyle(
@@ -212,30 +267,23 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushReplacementNamed(context, AppRoutes.signup);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(9),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Jetzet Registrieren",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

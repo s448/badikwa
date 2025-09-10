@@ -28,7 +28,7 @@ class _ListeningSkillPageState extends State<ListeningSkillPage> {
       builder: (context, state) {
         final bloc = context.read<ExamBloc>();
         final audio = bloc.audioController;
-        if (state is ExamAbandoned) {
+        if (state is ExamCompleted) {
           bloc.close();
         }
         if (state is! ExamLoaded) {

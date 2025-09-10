@@ -14,3 +14,20 @@ class User {
     return {'id': id, 'email': email, 'password': password, 'name': name};
   }
 }
+
+class LocalUser {
+  final int id;
+  final String fullName;
+  final String email;
+
+  LocalUser({required this.id, required this.fullName, required this.email});
+
+  LocalUser.fromJson(Map<String, dynamic> json)
+    : id = json['id'],
+      fullName = json['fullName'],
+      email = json['email'];
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'email': email, 'fullName': fullName};
+  }
+}

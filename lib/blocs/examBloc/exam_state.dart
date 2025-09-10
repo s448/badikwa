@@ -17,7 +17,7 @@ class ExamError extends ExamState {
   ExamError(this.message);
 }
 
-class ExamAbandoned extends ExamState {}
+// class ExamAbandoned extends ExamState {}
 
 class ExamCompleted extends ExamState {
   final double score;

@@ -148,6 +148,8 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
   late GlobalKey<_TaleWidgetState> taleWidgetKey;
   final HiveAnswerController hiveAnswerController = HiveAnswerController();
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -176,6 +178,17 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
         currentIndex++;
         taleWidgetKey = GlobalKey<_TaleWidgetState>();
       });
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(0);
+          _scrollController.animateTo(
+            0,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
     } else {
       widget.onFinished?.call();
     }
@@ -187,6 +200,8 @@ class _SkillTalesPageState extends State<SkillTalesPage> {
 
     return Scaffold(
       body: SingleChildScrollView(
+        controller: _scrollController,
+
         padding: const EdgeInsets.all(16),
         child: TaleWidget(key: taleWidgetKey, tale: tale),
       ),

@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
-import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/models/exam_model.dart';
 import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/writing_skill_page.dart';
+import 'package:prufcoach/views/widgets/buttons.dart';
 
 class ExamPage extends StatefulWidget {
   const ExamPage({super.key});
@@ -88,7 +88,9 @@ class _ExamPageState extends State<ExamPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          context.read<ExamBloc>().add(AbandonExam());
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(4.0),
@@ -137,8 +139,28 @@ class _ExamPageState extends State<ExamPage> {
         } else if (state is ExamError) {
           return Center(child: Text('Fehler: ${state.message}'));
         }
-        return const Scaffold(
-          body: Center(child: Text('Keine Prüfung geladen')),
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Keine Prüfung geladen',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: PrimaryButton(child: Text('Zurück zur Startseite')),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );

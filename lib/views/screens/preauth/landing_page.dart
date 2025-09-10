@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prufcoach/blocs/authBloc/auth_bloc.dart';
@@ -45,7 +46,7 @@ class LandingPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
-                      padding: EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
                       width: double.infinity,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -56,13 +57,24 @@ class LandingPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                         color: Colors.transparent,
                       ),
-                      child: Text(
-                        "Anmelden",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryGreen,
-                          fontSize: 18,
-                        ),
+                      child: BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          if (state is AuthLoadingState) {
+                            return const CupertinoActivityIndicator(
+                              radius: 15,
+                              color: AppColors.primaryGreen,
+                            );
+                          } else {
+                            return Text(
+                              "Anmelden",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryGreen,
+                                fontSize: 18,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
