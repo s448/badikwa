@@ -1,3 +1,4 @@
+// lib/views/screens/exam/ready_page.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,16 +9,36 @@ import 'package:prufcoach/core/utils/app_messages.dart';
 import 'package:prufcoach/core/utils/colors.dart';
 import 'package:prufcoach/views/widgets/buttons.dart';
 
-class ReadyPage extends StatelessWidget {
+class ReadyPage extends StatefulWidget {
   final int examId;
 
   const ReadyPage({super.key, required this.examId});
 
   @override
-  Widget build(BuildContext context) {
-    // You can fetch the exam from a list by ID here
-    context.read<ExamBloc>().add(LoadExamById(examId)); // Only once
+  State<ReadyPage> createState() => _ReadyPageState();
+}
 
+class _ReadyPageState extends State<ReadyPage>
+    with AutomaticKeepAliveClientMixin {
+  bool _requested = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_requested) {
+        context.read<ExamBloc>().add(LoadExamById(widget.examId));
+        _requested = true;
+      }
+    });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -45,6 +66,8 @@ class ReadyPage extends StatelessWidget {
                       'in die ${state.exam.level} Prüfung für Zuwandere',
                       style: const TextStyle(fontSize: 15),
                     );
+                  } else if (state is ExamError) {
+                    return Text('Fehler: ${state.message}');
                   }
                   return const SizedBox.shrink();
                 },

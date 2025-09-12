@@ -4,7 +4,6 @@ import 'package:prufcoach/blocs/examBloc/exam_bloc.dart';
 import 'package:prufcoach/blocs/examBloc/exam_event.dart';
 import 'package:prufcoach/blocs/examBloc/exam_state.dart';
 import 'package:prufcoach/core/utils/colors.dart';
-import 'package:prufcoach/views/screens/exam/exam_page.dart';
 
 class ReadingBriefingPage extends StatelessWidget {
   final int briefingIndex;
@@ -18,10 +17,7 @@ class ReadingBriefingPage extends StatelessWidget {
       body: BlocListener<ExamBloc, ExamState>(
         listener: (context, state) {
           if (state is ExamLoaded) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => ExamPage()),
-            );
+            Navigator.pop(context);
           }
         },
         child: Column(

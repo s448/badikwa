@@ -24,11 +24,7 @@ class ReadingSkillPage extends StatelessWidget {
                   exam: exam,
                   skillIndex: state.skillIndex,
                   onFinished: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      AppRoutes.writingBriefing,
-                      (route) => false,
-                    );
+                    Navigator.pushNamed(context, AppRoutes.writingBriefing);
                   },
                 ),
               );

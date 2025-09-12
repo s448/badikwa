@@ -80,11 +80,7 @@ class _ListeningSkillPageState extends State<ListeningSkillPage> {
                 exam: state.exam,
                 skillIndex: state.skillIndex,
                 onFinished: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.readingBriefing,
-                    (route) => false,
-                  );
+                  Navigator.pushNamed(context, AppRoutes.readingBriefing);
                 },
               ),
             ),
