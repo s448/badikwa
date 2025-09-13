@@ -3,6 +3,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:prufcoach/core/utils/asset_pathes.dart';
 import 'package:prufcoach/views/screens/home/home_page.dart';
 import 'package:prufcoach/views/screens/profile/profile_page.dart';
+import 'package:prufcoach/views/screens/vocabelgo/vocab_page.dart';
 
 class BottomNavBarPage extends StatefulWidget {
   const BottomNavBarPage({super.key});
@@ -61,6 +62,17 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
             icon: Image.asset(AssetPaths.profileIcon, width: 36, height: 36),
             inactiveIcon: Image.asset(
               AssetPaths.profileIcon,
+              width: 36,
+              height: 36,
+            ),
+          ),
+        ),
+        PersistentTabConfig(
+          screen: const VokabelGoPage(),
+          item: ItemConfig(
+            icon: Image.asset(AssetPaths.vocabIcon, width: 36, height: 36),
+            inactiveIcon: Image.asset(
+              AssetPaths.vocabIcon,
               width: 36,
               height: 36,
             ),

@@ -1,0 +1,17 @@
+{
+  "Agriculture": {
+    "Apfel": "تفاح",
+    "Bauer": "مزارع",
+    "Kuh": "بقرة"
+  },
+  "Science": {
+    "Wasserstoff": "هيدروجين",
+    "Mikroskop": "مجهر",
+    "Experiment": "تجربة"
+  },
+  "Travel": {
+    "Flugzeug": "طائرة",
+    "Zug": "قطار",
+    "Koffer": "حقيبة"
+  }
+}

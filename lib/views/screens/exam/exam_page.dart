@@ -9,6 +9,7 @@ import 'package:prufcoach/models/exam_model.dart';
 import 'package:prufcoach/views/screens/exam/Skills/listening_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/reading_skill_page.dart';
 import 'package:prufcoach/views/screens/exam/Skills/writing_skill_page.dart';
+import 'package:prufcoach/views/screens/exam/result_screen.dart';
 import 'package:prufcoach/views/widgets/buttons.dart';
 
 class ExamPage extends StatefulWidget {
@@ -138,6 +139,14 @@ class _ExamPageState extends State<ExamPage> {
           return const Center(child: CupertinoActivityIndicator());
         } else if (state is ExamError) {
           return Center(child: Text('Fehler: ${state.message}'));
+        } else if (state is ExamCompleted) {
+          final result = state.result;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ExamResultPage(result: result)),
+            );
+          });
         }
         return Scaffold(
           body: Center(

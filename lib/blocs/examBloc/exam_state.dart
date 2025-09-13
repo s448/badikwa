@@ -1,3 +1,4 @@
+import 'package:prufcoach/core/helpers/exam_validation_helper.dart';
 import 'package:prufcoach/models/exam_model.dart';
 
 abstract class ExamState {}
@@ -20,6 +21,7 @@ class ExamError extends ExamState {
 // class ExamAbandoned extends ExamState {}
 
 class ExamCompleted extends ExamState {
-  final double score;
-  ExamCompleted(this.score);
+  final ExamValidationResult result;
+
+  ExamCompleted(this.result);
 }

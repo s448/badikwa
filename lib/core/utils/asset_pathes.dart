@@ -3,6 +3,7 @@ class AssetPaths {
   static const String homeIcon = 'assets/icons/bottom_nav_home.png';
   static const String settingsIcon = 'assets/icons/bottom_nav_settings.png';
   static const String profileIcon = 'assets/icons/profile_ic.png';
+  static const String vocabIcon = 'assets/icons/vocab.png';
 
   // Bottom navigation bar icons (selected)
   static const String homeIconSelected =

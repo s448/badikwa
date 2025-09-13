@@ -1,0 +1,17 @@
+{
+  "Agriculture": {
+    "Apfel": "Яблоко",
+    "Bauer": "Фермер",
+    "Kuh": "Корова"
+  },
+  "Science": {
+    "Wasserstoff": "Водород",
+    "Mikroskop": "Микроскоп",
+    "Experiment": "Эксперимент"
+  },
+  "Travel": {
+    "Flugzeug": "Самолет",
+    "Zug": "Поезд",
+    "Koffer": "Чемодан"
+  }
+}

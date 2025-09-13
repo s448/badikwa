@@ -23,19 +23,39 @@ class ExamBloc extends Bloc<ExamEvent, ExamState> {
   Future<void> _finishExam(FinishExam event, Emitter<ExamState> emit) async {
     if (state is! ExamLoaded) return;
     final current = state as ExamLoaded;
+
     final answerSheet = await HiveAnswerController().getAnswers(
       current.exam.id.toString(),
     );
+    if (answerSheet == null) {
+      log('No answer sheet in hive for exam ${current.exam.id}');
+      emit(ExamError('No answers recorded'));
+      return;
+    }
 
-    final score = ExamValidationHelper.calculateExamScore(
-      current.exam,
-      answerSheet!,
+    // use verbose=true for debugging first
+    final result = ExamValidationHelper.evaluateExam(
+      exam: current.exam,
+      userAnswers: answerSheet,
+      useQuestionScore:
+          false, // set true to use question.score instead of 1 point
+      verbose: true, // set true first to print debug lines in console
     );
 
-    log("Exam finished with score: $score");
+    log(
+      'Exam finished. score=${result.totalAwarded}/${result.totalQuestions} ${result.percentage}%',
+    );
+    // optionally log per-question details
+    for (final q in result.perQuestion) {
+      log(
+        'Q ${q.questionId} idx${q.questionIndex} raw=${q.rawSelectedValues} selected=${q.selectedIndices} correct=${q.correctIndices} ok=${q.isCorrect}',
+      );
+    }
 
     audioController.dispose();
-    emit(ExamCompleted(score));
+    emit(
+      ExamCompleted(result),
+    ); // update ExamCompleted to carry the result object
   }
 
   Future<void> _onNextPartRequested(
